@@ -5,5 +5,5 @@
   "config_flow": true,
   "documentation": "https://example.invalid",
   "requirements": [],
-  "codeowners": []
+  "codeowners": ["@Shaffer-Softworks"]
 }
