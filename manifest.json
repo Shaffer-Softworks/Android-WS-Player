@@ -1,0 +1,9 @@
+{
+  "domain": "android_ws_player",
+  "name": "Android WS Player",
+  "version": "0.2.0",
+  "config_flow": true,
+  "documentation": "https://example.invalid",
+  "requirements": [],
+  "codeowners": []
+}
