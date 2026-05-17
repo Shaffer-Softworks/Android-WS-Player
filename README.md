@@ -9,7 +9,7 @@ Home Assistant custom integration that exposes each Android tablet as a **media 
 
 - One media player entity per tablet
 - Configurable `device_id` and event type per device
-- Rename devices from the integration options (gear icon)
+- Edit name, player ID, and event type from the integration options (gear icon)
 - `play_media`, `stop`, and `volume_set` support
 
 ## Installation
@@ -40,7 +40,7 @@ During setup you provide:
 | **Device ID** | Identifier your Android app listens for (e.g. `kitchen_tablet`) |
 | **Event type** | HA event name fired for commands (default: `android_ws_player_command`) |
 
-Use the integration **gear icon** to change the name or event type later.
+Use the integration **gear icon** to change the name, player ID, or event type later.
 
 ## Android app
 

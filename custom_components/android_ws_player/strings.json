@@ -21,9 +21,14 @@
         "title": "Android WS Player options",
         "data": {
           "name": "Name",
+          "device_id": "Player ID",
           "event_type": "Event type"
         }
       }
+    },
+    "error": {
+      "already_configured": "Another entry already uses this player ID.",
+      "invalid_device_id": "Player ID cannot be empty."
     }
   }
 }
