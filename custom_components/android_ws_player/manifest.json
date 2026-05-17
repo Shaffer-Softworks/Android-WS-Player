@@ -1,9 +1,11 @@
 {
   "domain": "android_ws_player",
   "name": "Android WS Player",
-  "version": "0.2.0",
+  "codeowners": ["@Shaffer-Softworks"],
   "config_flow": true,
-  "documentation": "https://example.invalid",
+  "documentation": "https://github.com/Shaffer-Softworks/Android-WS-Player#readme",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/Shaffer-Softworks/Android-WS-Player/issues",
   "requirements": [],
-  "codeowners": ["@Shaffer-Softworks"]
+  "version": "0.2.1"
 }

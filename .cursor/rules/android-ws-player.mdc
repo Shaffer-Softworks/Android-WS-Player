@@ -1,0 +1,65 @@
+---
+description: Android WS Player — Home Assistant custom integration context
+alwaysApply: true
+---
+
+# Android WS Player
+
+Home Assistant **custom integration** (HACS-ready) that exposes Android tablets as `media_player` entities. Commands are sent via the HA event bus; the tablet app listens on a WebSocket connection.
+
+- **Repo**: https://github.com/Shaffer-Softworks/Android-WS-Player
+- **Domain**: `android_ws_player`
+- **Version**: `0.2.1` (manifest)
+- **Min HA**: `2024.11.0` (`hacs.json`) — required for modern `OptionsFlow`
+
+## Architecture
+
+```
+custom_components/android_ws_player/
+  __init__.py          # setup_entry, reload on options change
+  config_flow.py       # user setup + options (gear icon)
+  media_player.py      # fires bus events (play_media, stop, set_volume)
+  const.py             # DOMAIN, CONF_DEVICE_ID, CONF_EVENT_TYPE
+  strings.json + translations/en.json
+  brand/               # custom icons (Android + headphones/play/waves); ignore brands in HACS CI
+```
+
+Each config entry = one tablet. Unique ID = `device_id`.
+
+## Event contract (default type: `android_ws_player_command`)
+
+```json
+{ "device_id": "kitchen_tablet", "command": "play_media", "url": "...", "media_type": "music" }
+{ "device_id": "...", "command": "stop" }
+{ "device_id": "...", "command": "set_volume", "volume": 0.8 }
+```
+
+## Options flow (important)
+
+HA 2024.11+ sets `self.config_entry` on `OptionsFlow` — **do not** pass `config_entry` to `__init__` or assign `self.config_entry`. Pattern:
+
+```python
+def async_get_options_flow(config_entry):
+    return AndroidWsPlayerOptionsFlow()  # no args
+```
+
+Gear-icon 500 errors were caused by the old `__init__(config_entry)` pattern.
+
+## HACS
+
+- Root: `hacs.json`, `README.md`, `LICENSE`, `.github/workflows/validate.yaml`
+- CI: `hassfest` + `hacs/action` with `ignore: brands` (brand assets ship in `custom_components/.../brand/`)
+- GitHub repo must have **at least one topic** (e.g. `home-assistant`, `hacs-integration`) or HACS validation fails
+- Default store: PR to `hacs/default` → add `"Shaffer-Softworks/Android-WS-Player"` to `integration` list (alphabetical); also needs a GitHub **release**
+
+## Brand assets
+
+Custom-generated artwork (not copied from Android-Management): Android mascot + headphones + play button + sound waves. Icons: 256/512 square; logos: wide format with `@2x` variants. Source drafts may live in Cursor `assets/`; committed files are under `brand/`.
+
+## Config fields
+
+| Field | Where | Purpose |
+|-------|--------|---------|
+| `name` | entry title | Friendly name |
+| `device_id` | entry data | Tablet listener ID |
+| `event_type` | data/options | Bus event name |
