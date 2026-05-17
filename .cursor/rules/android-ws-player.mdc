@@ -9,7 +9,7 @@ Home Assistant **custom integration** (HACS-ready) that exposes Android tablets 
 
 - **Repo**: https://github.com/Shaffer-Softworks/Android-WS-Player
 - **Domain**: `android_ws_player`
-- **Version**: `0.2.1` (manifest)
+- **Version**: `0.2.2` (manifest)
 - **Min HA**: `2024.11.0` (`hacs.json`) — required for modern `OptionsFlow`
 
 ## Architecture
@@ -61,5 +61,5 @@ Custom-generated artwork (not copied from Android-Management): Android mascot + 
 | Field | Where | Purpose |
 |-------|--------|---------|
 | `name` | entry title | Friendly name |
-| `device_id` | entry data | Tablet listener ID |
+| `device_id` | entry data (editable in options) | Tablet listener / player ID |
 | `event_type` | data/options | Bus event name |

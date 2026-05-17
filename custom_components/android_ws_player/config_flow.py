@@ -48,30 +48,59 @@ class AndroidWsPlayerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 class AndroidWsPlayerOptionsFlow(config_entries.OptionsFlow):
     async def async_step_init(self, user_input=None):
-        if user_input is not None:
-            # Update entry title (friendly name shown in UI)
-            new_title = user_input["name"].strip()
-            if new_title and new_title != self.config_entry.title:
-                self.hass.config_entries.async_update_entry(self.config_entry, title=new_title)
+        errors: dict[str, str] = {}
 
-            # Store other tunables in options
-            return self.async_create_entry(
-                title="",
-                data={
-                    CONF_EVENT_TYPE: user_input.get(CONF_EVENT_TYPE, DEFAULT_EVENT_TYPE).strip(),
-                },
-            )
+        if user_input is not None:
+            device_id = user_input[CONF_DEVICE_ID].strip()
+            new_title = user_input["name"].strip()
+
+            if not device_id:
+                errors["base"] = "invalid_device_id"
+            else:
+                for entry in self.hass.config_entries.async_entries(DOMAIN):
+                    if (
+                        entry.entry_id != self.config_entry.entry_id
+                        and entry.unique_id == device_id
+                    ):
+                        errors[CONF_DEVICE_ID] = "already_configured"
+                        break
+
+            if not errors:
+                data = dict(self.config_entry.data)
+                data[CONF_DEVICE_ID] = device_id
+
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry,
+                    title=new_title or self.config_entry.title,
+                    data=data,
+                    unique_id=device_id,
+                )
+
+                return self.async_create_entry(
+                    title="",
+                    data={
+                        CONF_EVENT_TYPE: user_input.get(
+                            CONF_EVENT_TYPE, DEFAULT_EVENT_TYPE
+                        ).strip(),
+                    },
+                )
 
         schema = vol.Schema(
             {
                 vol.Required("name", default=self.config_entry.title): str,
+                vol.Required(
+                    CONF_DEVICE_ID, default=self.config_entry.data[CONF_DEVICE_ID]
+                ): str,
                 vol.Optional(
                     CONF_EVENT_TYPE,
                     default=self.config_entry.options.get(
-                        CONF_EVENT_TYPE, self.config_entry.data.get(CONF_EVENT_TYPE, DEFAULT_EVENT_TYPE)
+                        CONF_EVENT_TYPE,
+                        self.config_entry.data.get(CONF_EVENT_TYPE, DEFAULT_EVENT_TYPE),
                     ),
                 ): str,
             }
         )
 
-        return self.async_show_form(step_id="init", data_schema=schema)
+        return self.async_show_form(
+            step_id="init", data_schema=schema, errors=errors
+        )
