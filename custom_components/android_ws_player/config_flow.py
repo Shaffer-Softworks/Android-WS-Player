@@ -22,7 +22,7 @@ class AndroidWsPlayerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             device_id = user_input[CONF_DEVICE_ID].strip()
 
             await self.async_set_unique_id(device_id)
-            self._abort_if_unique_id_configured()  # avoid duplicates :contentReference[oaicite:5]{index=5}
+            self._abort_if_unique_id_configured()
 
             title = user_input["name"].strip()
             data = {
@@ -44,12 +44,9 @@ class AndroidWsPlayerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        return AndroidWsPlayerOptionsFlow(config_entry)
+        return AndroidWsPlayerOptionsFlow()
 
 class AndroidWsPlayerOptionsFlow(config_entries.OptionsFlow):
-    def __init__(self, config_entry: config_entries.ConfigEntry):
-        self.config_entry = config_entry
-
     async def async_step_init(self, user_input=None):
         if user_input is not None:
             # Update entry title (friendly name shown in UI)

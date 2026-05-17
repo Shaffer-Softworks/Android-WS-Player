@@ -1,0 +1,29 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Android WS Player",
+        "description": "Create a media player that sends commands to your Android tablet via Home Assistant events.",
+        "data": {
+          "name": "Name",
+          "device_id": "Device ID",
+          "event_type": "Event type"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Android WS Player options",
+        "data": {
+          "name": "Name",
+          "event_type": "Event type"
+        }
+      }
+    }
+  }
+}
